@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>❤️ Para Você ❤️</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    background-color: #050b18;
+}
+
+/* ===== DEGRADÊ DO CÉU UNIFICADO ===== */
+#world {
+    position: relative;
+    width: 100%;
+    height: 200vh;
+    background: linear-gradient(to bottom, 
+        #050b18 0%, 
+        #081226 35%,
+        #0b1730 65%, 
+        #040914 100%
+    );
+    transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 2;
+}
+
+#sky, #hill {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: transparent;
+    overflow: hidden;
+}
+
+/* ===== ESTRELAS ===== */
+#stars {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    /* Transição suave para o efeito parallax */
+    transition: transform 0.1s linear; 
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: .2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ===== ESTRELAS CADENTES ===== */
+.shooting-star {
+    position: absolute;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,1), transparent);
+    border-radius: 50%;
+    transform: rotate(45deg);
+    opacity: 0;
+    z-index: 1;
+    animation: shoot linear forwards;
+}
+
+@keyframes shoot {
+    0% { transform: translateX(0) translateY(0) rotate(45deg); opacity: 1; }
+    100% { transform: translateX(400px) translateY(400px) rotate(45deg); opacity: 0; }
+}
+
+/* ===== FLORES E VAGALUMES (CAMADAS PARA PARALLAX) ===== */
+#flowers-layer, #fireflies-layer {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.1s linear;
+}
+
+.flower {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #f472b6;
+    border-radius: 50%;
+    z-index: 6;
+    animation: flowerPulse 4s infinite ease-in-out;
+}
+
+@keyframes flowerPulse {
+    0%, 100% { opacity: 0.3; filter: drop-shadow(0 0 2px #f472b6); transform: scale(0.9); }
+    50% { opacity: 1; filter: drop-shadow(0 0 8px #c084fc) brightness(1.3); transform: scale(1.1); }
+}
+
+.petal {
+    position: absolute;
+    background: linear-gradient(135deg, #fbcfe8, #f472b6);
+    border-radius: 80% 0 55% 50% / 80% 0 55% 50%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 6;
+    animation: floatPetal linear infinite;
+}
+
+@keyframes floatPetal {
+    0% { transform: translateX(-5vw) translateY(0vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translateX(105vw) translateY(15vh) rotate(420deg); opacity: 0; }
+}
+
+.firefly {
+    position: absolute;
+    width: 3.5px;
+    height: 3.5px;
+    background: #fef08a;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #facc15, 0 0 20px #eab308;
+    animation: floatFirefly 8s infinite ease-in-out;
+    opacity: 0;
+    z-index: 8;
+}
+
+@keyframes floatFirefly {
+    0%, 100% { transform: translateY(0) translateX(0) scale(0.8); opacity: 0; }
+    25% { opacity: 0.8; }
+    50% { transform: translateY(-50px) translateX(35px) scale(1.1); opacity: 1; }
+    75% { opacity: 0.4; }
+}
+
+/* ===== CONTEÚDO ===== */
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+h1 {
+    font-size: 3.5rem;
+    color: #ff7aa2;
+    text-shadow: 0 0 15px rgba(255, 122, 162, 0.6);
+    margin-bottom: 20px;
+}
+
+#carta {
+    display: none;
+    max-width: 600px;
+    width: 90%;
+    background: rgba(255, 255, 255, .03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, .1);
+    padding: 35px;
+    border-radius: 30px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    animation: abrirCartaAnim 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    z-index: 11;
+}
+
+@keyframes abrirCartaAnim {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#carta h2 { color: #ff7aa2; font-size: 1.8rem; margin-bottom: 10px; }
+#carta p { font-size: 1.1rem; line-height: 1.6; color: #e2e8f0; }
+
+button {
+    margin-top: 25px;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ff4d88, #e11d48);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 10px 25px rgba(225, 29, 72, 0.4);
+    transition: .4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 15px 30px rgba(225, 29, 72, 0.6);
+}
+
+#btn2 {
+    background: linear-gradient(135deg, #10b981, #047857);
+    box-shadow: 0 10px 25px rgba(4, 120, 87, 0.4);
+}
+
+/* Cénario escalado sutilmente para evitar bordas vazadas durante o parallax */
+.landscape-svg {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 95%;
+    display: block;
+    z-index: 5;
+    transform: scale(1.15); 
+    transform-origin: bottom center;
+}
+
+/* Transição suave para os elementos do SVG que vão se mover no mouse */
+.parallax-layer {
+    transition: transform 0.1s linear;
+}
+
+.final-text {
+    font-size: 2.5rem;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    animation: abrirCartaAnim 2s ease;
+    margin-bottom: 150px;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+</style>
+</head>
+
+<body>
+
+<audio id="bg-music" loop>
+    <source src="https://files.catbox.moe/qdom6i.mp3" type="audio/mpeg">
+</audio>
+
+<div id="world">
+
+    <div id="sky">
+        <div id="stars"></div>
+
+        <div class="container">
+            <h1 id="main-title">❤️ Para Bruna Sindel❤️</h1>
+            
+            <div id="carta">
+                <h2>Minha Carta ❤️</h2>
+                <br>
+                <p>Esta é uma pequena surpresa feita especialmente para você.</p>
+                <br>
+                <p>Talvez eu não encontre as palavras perfeitas para explicar tudo o que sinto.</p>
+                <br>
+                <p>Mas quero que saiba que sua presença deixa meus dias mais felizes.</p>
+                <br>
+                <p>Obrigado por existir.<br>Obrigado por fazer parte da minha vida. <br>Obrigado por deixar eu te conhecer.</p>
+                <br>
+                <h3>❤️ Com todo meu carinho ❤️</h3>
+            </div>
+
+            <button id="btnCarta" onclick="abrirCarta()">Começar ❤️</button>
+            <button id="btn2" style="display:none;" onclick="goHill()">Ir para as colinas ✨</button>
+        </div>
+    </div>
+
+    <div id="hill">
+        
+        <div id="flowers-layer" style="z-index: 6;"></div>
+        <div id="fireflies-layer" style="z-index: 8;"></div>
+
+        <svg class="landscape-svg" viewBox="0 0 1440 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="moon-glow">
+                    <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+
+                <linearGradient id="layer-back-hills" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#2e102f" />
+                    <stop offset="100%" stop-color="#050914" />
+                </linearGradient>
+                
+                <linearGradient id="layer-mid-valley" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#04331f" />
+                    <stop offset="100%" stop-color="#011b10" />
+                </linearGradient>
+                
+                <linearGradient id="layer-front-bushes" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#012413" />
+                    <stop offset="100%" stop-color="#000e06" />
+                </linearGradient>
+            </defs>
+
+            <path id="layer-moon" class="parallax-layer" d="M1220,90 A35,35 0 1,0 1270,140 A29,29 0 1,1 1220,90 Z" fill="#fffbeb" filter="url(#moon-glow)" opacity="0.85"/>
+
+            <path id="layer-back" class="parallax-layer" fill="url(#layer-back-hills)" d="M0,480 Q350,380 720,450 T1440,420 L1440,900 L0,900 Z" opacity="0.5"/>
+
+            <path id="layer-mid" class="parallax-layer" fill="url(#layer-mid-valley)" d="M0,580 Q400,480 850,600 T1440,550 L1440,900 L0,900 Z"/>
+            
+            <g id="layer-trees" class="parallax-layer">
+                <g transform="translate(720, 560)">
+                    <path d="M -8,10 L 8,10 L 4,-60 L -4,-60 Z" fill="#010603" />
+                    <circle cx="0" cy="-60" r="45" fill="#021c0e" />
+                    <circle cx="-35" cy="-45" r="35" fill="#011409" />
+                    <circle cx="35" cy="-45" r="35" fill="#011409" />
+                    <circle cx="-25" cy="-85" r="30" fill="#022110" />
+                    <circle cx="25" cy="-85" r="30" fill="#022110" />
+                    <circle cx="0" cy="-105" r="25" fill="#022813" />
+                </g>
+            </g>
+
+            <path id="layer-front" class="parallax-layer" fill="url(#layer-front-bushes)" d="M -20,900 L -20,650 Q 300,750 720,680 T 1460,700 L 1460,900 Z"/>
+        </svg>
+
+        <div class="container" style="z-index: 10;">
+            <h2 class="final-text">Feito com carinho... ✨</h2>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+let meteorInterval;
+const music = document.getElementById("bg-music");
+
+// ===== GERADOR DE ESTRELAS CADENTES E COMUNS =====
+const starsContainer = document.getElementById("stars");
+for(let i=0; i<280; i++){
+    const star = document.createElement("div");
+    star.className = "star";
+    const size = Math.random() * 2.5 + 1;
+    star.style.width = size + "px";
+    star.style.height = size + "px";
+    star.style.left = Math.random()*100+"vw";
+    star.style.top = Math.random()*100+"vh";
+    star.style.animationDelay = Math.random()*3+"s";
+    star.style.animationDuration = (2 + Math.random()*3)+"s";
+    starsContainer.appendChild(star);
+}
+
+function criarEstrelaCadente(){
+    const estrela = document.createElement("div");
+    estrela.className = "shooting-star";
+    estrela.style.top = Math.random()*30+"vh";
+    estrela.style.left = (Math.random()*60 + 10)+"vw";
+    estrela.style.animationDuration = (1.5 + Math.random()*1.5)+"s";
+    document.body.appendChild(estrela);
+    setTimeout(() => estrela.remove(), 3000);
+}
+for(let i=0; i<2; i++) { setTimeout(criarEstrelaCadente, i*1200); }
+meteorInterval = setInterval(criarEstrelaCadente, 2500);
+
+// ===== GERADOR DE FLORES BIOLUMINESCENTES =====
+const flowersLayer = document.getElementById("flowers-layer");
+for(let i=0; i<55; i++) {
+    const flower = document.createElement("div");
+    flower.className = "flower";
+    flower.style.left = Math.random() * 100 + "vw";
+    flower.style.top = (62 + Math.random() * 32) + "vh";
+    flower.style.animationDelay = Math.random() * 4 + "s";
+    flower.style.animationDuration = (3 + Math.random() * 3) + "s";
+    
+    if(Math.random() > 0.5) {
+        flower.style.background = "#c084fc";
+    }
+    flowersLayer.appendChild(flower);
+}
+
+// ===== GERADOR DE PÉTALAS FLUTUANTES AO VENTO =====
+function criarPetala() {
+    const petal = document.createElement("div");
+    petal.className = "petal";
+    petal.style.width = (6 + Math.random() * 8) + "px";
+    petal.style.height = (4 + Math.random() * 6) + "px";
+    petal.style.top = (25 + Math.random() * 65) + "vh";
+    petal.style.animationDuration = (8 + Math.random() * 6) + "s";
+    document.getElementById("hill").appendChild(petal);
+    setTimeout(() => petal.remove(), 14000);
+}
+setInterval(criarPetala, 900);
+
+// ===== VAGALUMES =====
+const firefliesLayer = document.getElementById("fireflies-layer");
+for(let i=0; i<30; i++){
+    const f = document.createElement("div");
+    f.className = "firefly";
+    f.style.left = Math.random()*100+"vw";
+    f.style.top = (50 + Math.random()*40)+"vh"; 
+    f.style.animationDelay = Math.random()*6+"s";
+    f.style.animationDuration = (6 + Math.random()*5)+"s";
+    firefliesLayer.appendChild(f);
+}
+
+// ===== EFEITO PARALLAX (Profundidade 3D com o Mouse) =====
+document.addEventListener("mousemove", (e) => {
+    // Calcula a posição do mouse em relação ao centro da tela (-1 a 1)
+    const x = (e.clientX / window.innerWidth - 0.5) * 2;
+    const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+    // Move as estrelas sutilmente
+    const stars = document.getElementById("stars");
+    if(stars) stars.style.transform = `translate(${x * -15}px, ${y * -15}px)`;
+
+    // Move a Lua bem pouquinho (porque está longe)
+    const moon = document.getElementById("layer-moon");
+    if(moon) moon.style.transform = `translate(${x * -5}px, ${y * -2}px)`;
+
+    // Colinas ao fundo
+    const back = document.getElementById("layer-back");
+    if(back) back.style.transform = `translate(${x * -20}px, ${y * -5}px)`;
+
+    // Vale intermediário
+    const mid = document.getElementById("layer-mid");
+    if(mid) mid.style.transform = `translate(${x * -35}px, ${y * -10}px)`;
+
+    // Árvore central
+    const trees = document.getElementById("layer-trees");
+    if(trees) trees.style.transform = `translate(${x * -50}px, ${y * -15}px)`;
+
+    // Arbustos frontais, flores e vagalumes se movem mais rápido (mais perto da tela)
+    const front = document.getElementById("layer-front");
+    if(front) front.style.transform = `translate(${x * -70}px, ${y * -25}px)`;
+    
+    if(flowersLayer) flowersLayer.style.transform = `translate(${x * -70}px, ${y * -25}px)`;
+    if(firefliesLayer) firefliesLayer.style.transform = `translate(${x * -50}px, ${y * -20}px)`;
+});
+
+// ===== TRANSIÇÕES =====
+function abrirCarta(){
+    document.getElementById("btnCarta").remove();
+    const carta = document.getElementById("carta");
+    carta.style.display = "block";
+
+    setTimeout(() => {
+        const btn2 = document.getElementById("btn2");
+        btn2.style.display = "block";
+    }, 4000);
+}
+
+function goHill(){
+    // A música inicia silenciosamente ao clicar
+    music.play().catch(error => console.log("Áudio necessita interação direta dependendo do navegador", error));
+
+    document.getElementById("world").style.transform = "translateY(-100vh)";
+    document.getElementById("btn2").remove();
+}
+
+</script>
+
+</body>
+</html>
